@@ -90,7 +90,7 @@ print_ts "INFO" "Using Name: ${INAME}\n"
 
 # Get directory this script is being run from for writing output later
 export WORKINGDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export ENVFILE="${WORKINGDIR}/env-${INAME}_setup.sh"
+export ENVFILE="${WORKINGDIR}/env_setup.sh"
 
 # Create environment variables
 # Read Kubernetes cluster name from input
