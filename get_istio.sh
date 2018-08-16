@@ -35,15 +35,22 @@ if [ ! -d "$PWD/$NAME" ];
 then
   URL="https://github.com/istio/istio/releases/download/${ISTIO_VERSION}/istio-${ISTIO_VERSION}-${OSEXT}.tar.gz"
   echo "Downloading $NAME from $URL ..."
-  curl -L "$URL" | tar xz
+  curl -L "$URL" &>/dev/null -o "$WORKINGDIR/$NAME.tar.gz"
+  tar xzf "$WORKINGDIR/$NAME.tar.gz"
+  rm "$WORKINGDIR/$NAME.tar.gz"
+  mv "$WORKINGDIR/$NAME" "$WORKINGDIR/istio_install"
+  NAME="$WORKINGDIR/istio_install"
   # TODO: change this so the version is in the tgz/directory name (users trying multiple versions)
   echo "Downloaded into $NAME:"
   ls "$NAME"
   BINDIR="$(cd "$NAME/bin" && pwd)"
   echo "Add $BINDIR to your path; e.g copy paste in your shell and/or ~/.profile:"
   echo "export PATH=\"\$PATH:$BINDIR\""
-
-  echo "export PATH=\"\$PATH:$BINDIR\"" >> "$ENV_FILE"
+  grep -q "$NAME" "$ENV_FILE"
+  if [ $? -ne 0 ]
+  then
+    echo "export PATH=\"\$PATH:$BINDIR\"" >> "$ENV_FILE"
+  fi
 fi
 
 cd $NAME
