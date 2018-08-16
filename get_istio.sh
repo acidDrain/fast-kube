@@ -15,7 +15,7 @@
 
 # Get project directory
 export WORKINGDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export ENV_FILE=$(ls -1 "$WORKINGDIR" | grep -E "env-.*\.sh")
+export ENV_FILE="$WORKINGDIR/env_setup.sh"
 
 OS="$(uname)"
 if [ "x${OS}" = "xDarwin" ] ; then
@@ -30,16 +30,16 @@ if [ "x${ISTIO_VERSION}" = "x" ] ; then
                   grep tag_name | sed "s/ *\"tag_name\": *\"\\(.*\\)\",*/\\1/")
 fi
 
-NAME="istio-$ISTIO_VERSION"
+NAME="istio_install"
 if [ ! -d "$PWD/$NAME" ];
 then
   URL="https://github.com/istio/istio/releases/download/${ISTIO_VERSION}/istio-${ISTIO_VERSION}-${OSEXT}.tar.gz"
   echo "Downloading $NAME from $URL ..."
   curl -L "$URL" &>/dev/null -o "$WORKINGDIR/$NAME.tar.gz"
-  tar xzf "$WORKINGDIR/$NAME.tar.gz"
+  mkdir "$WORKINGDIR/istio_install"
+  tar xzf "$WORKINGDIR/$NAME.tar.gz" --strip-components 1 -C "$WORKINGDIR/istio_install"
   rm "$WORKINGDIR/$NAME.tar.gz"
-  mv "$WORKINGDIR/$NAME" "$WORKINGDIR/istio_install"
-  NAME="$WORKINGDIR/istio_install"
+  # NAME="$WORKINGDIR/istio_install"
   # TODO: change this so the version is in the tgz/directory name (users trying multiple versions)
   echo "Downloaded into $NAME:"
   ls "$NAME"
