@@ -69,4 +69,17 @@ helm init --service-account tiller
 sleep 10
 
 # Install Istio
-helm install install/kubernetes/helm/istio --name istio --namespace istio-system --set tracing.enable=true
+helm install install/kubernetes/helm/istio --name istio --namespace istio-system \
+  --set ingress.enabled=true \
+  --set gateways.istio-ingressgateway.enabled=true \
+  # --set gateways.istio-egressgateway.enabled=true \
+  --set galley.enabled=true \
+  --set sidecarInjectorWebhook.enabled=true \
+  --set mixer.enabled=true \
+  --set prometheus.enabled=true \
+  --set tracing.enabled=true \
+  --set global.proxy.envoyStatsd.enabled=true
+sleep 10
+
+# Enable automatic sidecar injection for default namespace
+kubectl label namespace default istio-injection=enabled
