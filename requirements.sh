@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export PACKAGES="terraform kops kubernetes-cli awscli"
+export PACKAGES="terraform kops kubernetes-cli awscli helm"
 export LIGHT_GREEN="\e[38;5;85m"
 export YELLOW_WARNING="\e[38;5;226m"
 export RESET_COLOR="\e[0m"

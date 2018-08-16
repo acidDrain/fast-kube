@@ -3,3 +3,9 @@ javascript_server/node_modules
 
 # Ignore kube-create log file
 .kube-create.log
+
+# Istio's install dir
+istio_install
+
+# Environment script/artifact
+env_setup.sh
