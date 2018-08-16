@@ -7,3 +7,5 @@ javascript_server/node_modules
 # Istio's install dir
 istio_install
 
+# Environment script/artifact
+env_setup.sh
