@@ -20,13 +20,14 @@ export PADDING=$(($(echo "$MESSAGE" | wc -m)-1))
 export QUARTER_COLS=$((($HALF_COLS / 2)-$PADDING/2))
 export QUARTERLINE="\e[38;5;85m`printf -- "-%.0s" {$(seq $(expr $QUARTER_COLS))}`\e[0m"
 
+# Define a function to print colorized timestamps and arguments (messages)
 function print_ts() {
   TIMESTAMP=$(date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s")
   echo -e "${YELLOW_WARNING}$TIMESTAMP - $1 - $2${RESET_COLOR}"
   return 0
 }
 
-export USAGE="\nkube-create.sh: A tool to create a Kubernetes cluster in AWS and setup remote state in S3\n\nUSAGE: kube-create.sh\n\t-n\t<NAME>\n\t-A\t<comma separated list of IP addresses to allow>\n\t-m\t<MASTERS>\n\t-z\t<NUMBER OF ZONES>\n\t-S\t<instance size (e.g. t2.medium)>\n\t-r\t<REGION>\n\nThis script will automatically attach the suffix .k8s.local to the name you provide,\nso that DNS and service discovery operate with Kubernetes internal DNS,\navoiding the need to register a public domain name.\n\nSee https://github.com/kubernetes/kops/blob/master/docs/aws.md#configure-dns\n\n"
+export USAGE="\nkube-create.sh: A tool to create a Kubernetes cluster in AWS and setup remote state in S3\n\nUSAGE: kube-create.sh\n\t-n\t<NAME>\n\t-A\t<comma separated list of IP addresses to allow>\n\t-m\t<MASTERS>\n\t-z\t<NUMBER OF ZONES>\n\t-S\t<instance size (e.g. t2.micro [free tier])>\n\t-r\t<REGION>\n\nThis script will automatically attach the suffix .k8s.local to the name you provide,\nso that DNS and service discovery operate with Kubernetes internal DNS,\navoiding the need to register a public domain name.\n\nSee https://github.com/kubernetes/kops/blob/master/docs/aws.md#configure-dns\n\n"
 
 while getopts ":n:z:m:r:A:S:h" opt ${OPTION_VARIABLES[@]}; do
     case $opt in
@@ -100,7 +101,8 @@ export AWS_ZONE_LETTERS=(a b c)
 export NODE_ZONES
 export MASTER_ZONES
 
-if [[ $(aws s3 ls | awk '{print $NF}' | grep -q "${NAME}-state-store") -ne 0 ]]
+$(aws s3 ls | awk '{print $NF}' | grep -q "${NAME}-state-store")
+if [[ $? -ne 0 ]]
   then
     print_ts "INFO" "Store doesn't exist - creating bucket: ${NAME}-state-store\n"
     # Create bucket:
@@ -112,7 +114,8 @@ if [[ $(aws s3 ls | awk '{print $NF}' | grep -q "${NAME}-state-store") -ne 0 ]]
 fi
 
 print_ts "INFO" "Checking for existing cluster\n"
-if [[ $(kops get cluster $NAME 2>/dev/null| grep -q -i "not found") -eq 0 ]]
+$(kops get cluster $NAME 2>/dev/null| grep -q -i "not found")
+if [[ $? -ne 0 ]]
   then
     # echo -e "$COLORLINE"
     print_ts "INFO" "Cluster by name of $NAME does not exist\n"
@@ -136,10 +139,10 @@ if [[ $(kops get cluster $NAME 2>/dev/null| grep -q -i "not found") -eq 0 ]]
     done
     MASTER_ZONES=$(echo ${MASTER_ZONES} | sed -e 's/^,//g')
 
-    if [ ! -e "${WORKINGDIR}/${NAME}" ]
-    then
-        mkdir -p "${WORKINGDIR}/${NAME}"
-    fi
+    # if [ ! -e "${WORKINGDIR}/${NAME}" ]
+    # then
+    #     mkdir -p "${WORKINGDIR}/${NAME}"
+    # fi
 
     echo "$ORIG_COLS" >> ${WORKINGDIR}/.kube-create.log
 
