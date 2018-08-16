@@ -14,8 +14,11 @@ _NOTE: You must have homebrew installed. You can get homebrew [here](https://doc
 .
 ├── README.md
 ├── build.sh
+├── get_istio.sh
+├── istio_bookinfo_sample_setup.sh
 ├── javascript_server
 │   ├── Dockerfile
+│   ├── node_modules
 │   ├── package-lock.json
 │   ├── package.json
 │   └── server.js
@@ -27,6 +30,8 @@ _NOTE: You must have homebrew installed. You can get homebrew [here](https://doc
 - kube-create.sh - provision a Kubernetes cluster in AWS
 - javascript_server - directory containing a simply nodejs based server that just responds with 200 and "Success" for testing
 - build.sh - a script to build a docker image for javascript_server
+- get_istio.s - a script to download and install istio to the working directory (and on the Kubernetes cluster), also has some configuration done out of the box
+- istio_bookinfo_sample_setup.sh - a script to automate the deployment of a sample application to demonstrate istio's capabilities
 
 ### Installing Dependencies
 
