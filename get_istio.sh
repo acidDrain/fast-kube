@@ -69,4 +69,4 @@ helm init --service-account tiller
 sleep 10
 
 # Install Istio
-helm install install/kubernetes/helm/istio --name istio --namespace istio-system
+helm install install/kubernetes/helm/istio --name istio --namespace istio-system --set tracing.enable=true
