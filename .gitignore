@@ -3,3 +3,6 @@ javascript_server/node_modules
 
 # Ignore kube-create log file
 .kube-create.log
+
+istio-*.*.
+
